@@ -28,3 +28,4 @@ npm install @supabase/supabase-js
 
 - 开发动作
 npm run dev之前，记得运行npm install，避免报错
+- API key相关，统一写到 config.json统一维护
