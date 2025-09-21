@@ -1,0 +1,145 @@
+# 微信公众号编辑器 - 技术API文档
+
+## 技术架构
+
+### 核心框架
+- Next.js 15
+- React 18
+- Shadcn-ui
+- Tailwind CSS
+
+### 外部框架
+- @supabase/supabase-js - 数据库操作
+- framer-motion - 动画效果
+- lucide-react - 图标库
+- marked - Markdown解析
+- react-markdown - Markdown渲染
+- ali-oss - 阿里云OSS存储
+- sonner - Toast提示
+
+## 外部API集成
+
+### AI写作助手API
+- 端点: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+- 认证: Bearer Token
+- API Key: sk-4ab21a8928f043fdaca8ea24adba1ff3
+- 功能: 文本生成、对话交互
+
+### 语音转文字API
+- 端点: https://ai.pisolutions.cn/v1/audio-to-text
+- 认证: API Key
+- API Key: app-45C4THCexMXqdnSbaqHTCfId
+- 功能: 音频转文字
+
+const formData = new FormData();
+formData.append('file', audioBlob, 'audio.webm');
+const response = await fetch('https://ai.pisolutions.cn/v1/audio-to-text', {
+    method: 'POST',
+    headers: {
+        'Authorization': 'Bearer app-45C4THCexMXqdnSbaqHTCfId'
+    },
+    body: formData
+});
+const result = await response.json();
+console.log(result.text); // 输出识别结果
+
+### 阿里云OSS API
+- SDK: ali-oss
+- Access Key ID: [请在config.json中配置]
+- Access Key Secret: [请在config.json中配置]
+- Bucket Name: [请在config.json中配置]
+- Region: ap-northeast-1
+- Endpoint: oss-ap-northeast-1.aliyuncs.com
+- 功能: 文件上传、图片存储
+
+### Supabase数据库API
+- URL: https://hqieheoiukettbinrjcg.supabase.co
+- Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxaWVoZW9pdWtldHRiaW5yamNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0Njg3NjksImV4cCI6MjA2MzA0NDc2OX0.nw7MkqsbVhUALbuV9rmqoAr3T--Tcluv7c-3HAlptEI
+- 功能: 数据库操作、实时数据同步
+
+## 前端API接口
+
+### 草稿管理
+- saveDraft(draftData: DraftInput) → Promise<{data: Draft, error: Error}> // 保存草稿
+- getDrafts(options?: QueryOptions) → Promise<{data: Draft[], error: Error}> // 获取草稿列表
+- updateDraft(id: number, updates: Partial<Draft>) → Promise<{data: Draft, error: Error}> // 更新草稿
+- deleteDraft(id: number) → Promise<{data: Draft, error: Error}> // 删除草稿
+- toggleFavorite(id: number) → Promise<{data: {is_favorite: boolean}, error: Error}> // 切换收藏状态
+
+### 文件处理
+- uploadImage(file: File, onProgress?: Function) → Promise<{success: boolean, url?: string, error?: string}> // 上传图片
+- generateStyledHTML(content: string, theme: string) → string // 生成带样式的HTML
+- copyToClipboard(text: string) → Promise<boolean> // 复制到剪贴板
+
+### AI交互
+- chatWithAI(message: string, history: ChatMessage[]) → Promise<Response> // AI对话
+- generateContent(prompt: string, options?: AIOptions) → Promise<string> // 生成内容
+- optimizeText(text: string, type: string) → Promise<string> // 优化文本
+
+### 语音处理
+- startRecording() → Promise<{mediaRecorder: MediaRecorder, audioChunks: Blob[]}> // 开始录音
+- stopRecording(mediaRecorder: MediaRecorder) → Promise<Blob> // 停止录音
+- transcribeAudio(audioBlob: Blob) → Promise<string> // 音频转文字
+
+### 工具函数
+- convertMarkdownToHTML(markdown: string) → string // Markdown转HTML
+- calculateWordCount(text: string) → {wordCount: number, charCount: number} // 计算字数
+- formatText(text: string, start: number, end: number, format: string) → string // 格式化文本
+- applyTheme(content: string, theme: string) → string // 应用主题样式
+
+## 数据类型定义
+
+### DraftInput
+```
+{
+  title: string
+  content: string
+  markdown_content: string
+  word_count: number
+  character_count: number
+  theme: string
+}
+```
+
+### Draft
+```
+{
+  id: number
+  title: string
+  content: string
+  markdown_content: string
+  word_count: number
+  character_count: number
+  theme: string
+  is_favorite: boolean
+  created_at: string
+  updated_at: string
+}
+```
+
+### QueryOptions
+```
+{
+  page?: number
+  limit?: number
+  search?: string
+  favorites_only?: boolean
+}
+```
+
+### ChatMessage
+```
+{
+  role: 'user' | 'assistant' | 'system'
+  content: string
+}
+```
+
+### AIOptions
+```
+{
+  temperature?: number
+  max_tokens?: number
+  stream?: boolean
+}
+```

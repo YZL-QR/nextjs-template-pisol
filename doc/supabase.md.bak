@@ -1,0 +1,67 @@
+# 微信公众号编辑器 - 数据库表文档
+
+## Supabase项目信息
+
+project_url: https://hqieheoiukettbinrjcg.supabase.co
+annokey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxaWVoZW9pdWtldHRiaW5yamNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0Njg3NjksImV4cCI6MjA2MzA0NDc2OX0.nw7MkqsbVhUALbuV9rmqoAr3T--Tcluv7c-3HAlptEI
+schema: public
+
+## 数据库表结构
+
+### drafts（草稿表）
+
+```sql
+CREATE TABLE public.drafts (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    markdown_content TEXT NOT NULL,
+    word_count INTEGER DEFAULT 0,
+    character_count INTEGER DEFAULT 0,
+    theme VARCHAR(50) DEFAULT 'default',
+    is_favorite BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+### 示例数据
+
+```sql
+INSERT INTO public.drafts (
+    title,
+    content,
+    markdown_content,
+    word_count,
+    character_count,
+    theme,
+    is_favorite
+) VALUES 
+(
+    'AI技术发展趋势分析',
+    '<h1>AI技术发展趋势分析</h1><p>人工智能技术正在快速发展...</p>',
+    '# AI技术发展趋势分析\n\n人工智能技术正在快速发展...',
+    1250,
+    1580,
+    'tech',
+    true
+),
+(
+    '微信公众号运营指南',
+    '<h1>微信公众号运营指南</h1><p>本文将详细介绍微信公众号的运营策略...</p>',
+    '# 微信公众号运营指南\n\n本文将详细介绍微信公众号的运营策略...',
+    2100,
+    2650,
+    'default',
+    false
+),
+(
+    '产品设计思维方法论',
+    '<h1>产品设计思维方法论</h1><p>设计思维是一种以用户为中心的创新方法...</p>',
+    '# 产品设计思维方法论\n\n设计思维是一种以用户为中心的创新方法...',
+    1800,
+    2200,
+    'elegant',
+    true
+);
+```
